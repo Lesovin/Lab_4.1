@@ -97,6 +97,44 @@ Tree* Map::balance(Tree* p)
 	return p;
 }
 
+Tree* Map::erase_min(Tree* p)
+{
+	if (p->left == 0)
+		return p->right;
+	p->left = erase_min(p->left);
+	return balance(p);
+}
+
+Tree* Map::erase_elem(Tree* p, int key)
+{
+	if (!p) return nullptr;
+	if (key < p->key)
+	{
+		p->right = erase_elem(p->right, key);
+	}
+	else if (key>p->key)
+	{
+		p->left = erase_elem(p->left, key);
+	}
+	else
+	{
+		Tree* temp_left = p->left;
+		Tree* temp_right = p->right;
+		delete p;
+		if (!temp_right) return temp_left;
+		Tree* min = find_min(temp_right);
+		min->right = erase_min(temp_right);
+		min->left = temp_left->left;
+		return balance(min);
+	}
+	return balance(p);
+}
+
+Tree* Map::find_min(Tree* p)
+{
+	return p->left ? find_min(p->left) : p;
+}
+
 Map::Map()
 {
 	root = nullptr;
@@ -128,14 +166,14 @@ const std::string& Map::find(int key) const
 	Tree* temp = root;
 	while (temp != nullptr)
 	{
-		if (key == temp->key) return root->data;
+		if (key == temp->key) return temp->data;
 		if (key < temp->key)
 		{
-			temp = temp->left;
-		}
-		if (key > temp->key)
-		{
 			temp = temp->right;
+		}
+		else if (key > temp->key)
+		{
+			temp = temp->left;
 		}
     }
 	throw "No elements with this key!";
@@ -143,6 +181,6 @@ const std::string& Map::find(int key) const
 
 bool Map::erase(int key)
 {
-	
-	return false;
+	root = erase_elem(root, key);
+	return true;
 }

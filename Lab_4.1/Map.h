@@ -26,6 +26,9 @@ private:
 	Tree* rotate_right(Tree* p);
 	Tree* rotateleft(Tree* q);
 	Tree* balance(Tree* p);
+	Tree* find_min(Tree* p);
+	Tree* erase_min(Tree* p);
+	Tree* erase_elem(Tree* p, int key);
 public:
 	Map();
 	~Map();
