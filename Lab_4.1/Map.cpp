@@ -2,22 +2,22 @@
 #include <iostream>
 
 
-Tree* Map::insert(int key, std::string value, Tree* root)
+Tree* Map::insert(int key, std::string value, Tree* p)
 {
-	if (root == nullptr)
+	if (p == nullptr)
 	{
-		root = new Tree(key, value);
+		p = new Tree(key, value);
 	}
 	else if (key > root->key)
 	{
-		root->left = insert(key, value, root->left);
+		p->left = insert(key, value, p->left);
 	}
 	else if (key < root->key)
 	{
-		root->right = insert(key, value, root->right);
+		p->right = insert(key, value, p->right);
 	}
-	else throw "Fatal error";
-	return root;
+	else throw "Element with this key already exist!";
+	return balance(p);
 }
 
 void Map::delete_tree(Tree* p)
@@ -122,9 +122,10 @@ Tree* Map::erase_elem(Tree* p, int key)
 		Tree* temp_right = p->right;
 		delete p;
 		if (!temp_right) return temp_left;
+		if (!temp_left) return temp_right;
 		Tree* min = find_min(temp_right);
 		min->right = erase_min(temp_right);
-		min->left = temp_left->left;
+		min->left = temp_left;
 		return balance(min);
 	}
 	return balance(p);
