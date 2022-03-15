@@ -10,11 +10,11 @@ Tree* Map::insert(int key, std::string value, Tree* p)
 	}
 	else if (key > root->key)
 	{
-		p->left = insert(key, value, p->left);
+		p->right = insert(key, value, p->right);
 	}
 	else if (key < root->key)
 	{
-		p->right = insert(key, value, p->right);
+		p->left = insert(key, value, p->left);
 	}
 	else throw "Element with this key already exist!";
 	return balance(p);
@@ -33,10 +33,10 @@ void Map::print(Tree* p, int level) const
 {
 	if (p)
 	{
-		print(p->left, level + 1);
+		print(p->right, level + 1);
 		for (int i = 0; i < level; i++) std::cout << "   ";
 		std::cout << p->key << std::endl;
-		print(p->right, level + 1);
+		print(p->left, level + 1);
 	}
 }
 
@@ -99,7 +99,7 @@ Tree* Map::balance(Tree* p)
 
 Tree* Map::erase_min(Tree* p)
 {
-	if (p->left == 0)
+	if (p->left == nullptr)
 		return p->right;
 	p->left = erase_min(p->left);
 	return balance(p);
@@ -110,11 +110,11 @@ Tree* Map::erase_elem(Tree* p, int key)
 	if (!p) return nullptr;
 	if (key < p->key)
 	{
-		p->right = erase_elem(p->right, key);
+		p->left = erase_elem(p->left, key);
 	}
 	else if (key>p->key)
 	{
-		p->left = erase_elem(p->left, key);
+		p->right = erase_elem(p->right, key);
 	}
 	else
 	{
@@ -170,11 +170,11 @@ const std::string& Map::find(int key) const
 		if (key == temp->key) return temp->data;
 		if (key < temp->key)
 		{
-			temp = temp->right;
+			temp = temp->left;
 		}
 		else if (key > temp->key)
 		{
-			temp = temp->left;
+			temp = temp->right;
 		}
     }
 	throw "No elements with this key!";
