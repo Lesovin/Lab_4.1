@@ -8,15 +8,15 @@ Tree* Map::insert(int key, std::string value, Tree* p)
 	{
 		p = new Tree(key, value);
 	}
-	else if (key > root->key)
-	{
-		p->right = insert(key, value, p->right);
-	}
-	else if (key < root->key)
+	else if (key < p->key)
 	{
 		p->left = insert(key, value, p->left);
 	}
-	else throw "Element with this key already exist!";
+	else if (key > p->key)
+	{
+		p->right = insert(key, value, p->right);
+	}
+	else  throw "Element with this key already exist!";
 	return balance(p);
 }
 
@@ -80,7 +80,6 @@ Tree* Map::rotateleft(Tree* q)
 
 Tree* Map::balance(Tree* p)
 {
-
 	fix_height(p);
 	if (balance_factor(p) == 2)
 	{
